@@ -212,7 +212,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="10" name="layer" visible="0">
+ <objectgroup id="10" name="layer">
   <object id="36" x="394" y="886">
    <polygon points="-5.66667,8.33333 -82.6666,-54 -90.1666,-141.167 5,-138.333 40,-102.667"/>
   </object>
