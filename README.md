@@ -1,4 +1,6 @@
 # PPBO Gim Project
+<img align="center" src="https://raw.githubusercontent.com/Leo42night/Leo42night/main/img/2.5D-virtual-show.png" />
+
 Gim virtual tour dari Capstone Project kelas Praktikum PBO 2025.
 - Isometric 2D JS Engine Game (PixiJs)
 - Showroom project
