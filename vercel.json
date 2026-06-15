@@ -15,5 +15,16 @@
             "dest": "/api/index.php"
         }
     ],
-    "outputDirectory": "public"
+    "outputDirectory": "public",
+    "headers": [
+        {
+            "source": "/(.*).tmx",
+            "headers": [
+                {
+                    "key": "Content-Type",
+                    "value": "text/xml"
+                }
+            ]
+        }
+    ]
 }
