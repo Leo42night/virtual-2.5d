@@ -88,22 +88,44 @@ const logoutBtn = document.getElementById("logoutBtn");
   }
 
   async function getMeAndSyncState() {
-    const meRes = await fetch(`/api/me`, { credentials: "include" });
-    const data = await meRes.json();
-    // console.log("[ME]:", data);
+    try {
+      const meRes = await fetch(`/api/me`, { credentials: "include" });
 
-    if (!meRes.ok || data?.error) {
-      // kalau backend bilang unauth, reset state
+      const text = await meRes.text(); // ambil raw dulu sebelum parse
+      console.log("[ME] status:", meRes.status);
+      console.log("[ME] raw:", text);
+
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (parseErr) {
+        console.error("[ME] JSON parse failed:", parseErr.message);
+        console.error("[ME] response bukan JSON, kemungkinan HTML/PHP error");
+        me = null;
+        setLoggedIn(false);
+        return false;
+      }
+
+      console.log("[ME] parsed:", data);
+
+      if (!meRes.ok || data?.error) {
+        console.warn("[ME] unauth atau error:", data?.error, data?.message);
+        me = null;
+        setLoggedIn(false);
+        return false;
+      }
+
+      me = data;
+      setLoggedIn(true);
+      applyMeToUI(me);
+      return true;
+
+    } catch (networkErr) {
+      console.error("[ME] network error:", networkErr.message);
       me = null;
       setLoggedIn(false);
       return false;
     }
-
-    // ✅ sukses
-    me = data;
-    setLoggedIn(true);
-    applyMeToUI(me);
-    return true; // ✅ penting
   }
 
   function rateLoginState() {

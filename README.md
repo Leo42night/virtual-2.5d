@@ -43,13 +43,14 @@ Struktur PHP MVC:
 - `App/config/config.php`: load data env
   
 ## Deployment
-Current:
-- Vercel
+Current Stable [](#) ([Video Test Demo](#)):
+- Vercel (auto trigger github, Domain Mapping Hostinger)
+   - masukkan .env selain `GOOGLE_REDIRECT_URI` ketika setup deploy
 - Database: Turso SQLite (HTTP API)
 
 1st [6537b5](https://github.com/Leo42night/virtual-2.5d/commit/6537b5041c4880cc18acafd9038d88d0a9f4e5f4):
 - Google Cloud Build (auto-trigger from repo Github)
-- Google Cloud Run (domain mapping using Hostinger service)
+- Google Cloud Run (Domain Mapping Hostinger)
 - Google Cloud SQL (socket connection PDO)
 
 ## Ideas

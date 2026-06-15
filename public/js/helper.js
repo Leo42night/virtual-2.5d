@@ -508,15 +508,8 @@
     clearMapLayers();
 
     const tmxText = await fetchText(tmxUrl);
-    console.log("TMX status:", tmxText?.length, tmxUrl); // cek panjang string
-    console.log("TMX preview:", tmxText?.slice(0, 100)); // cek isi awal
     const tmxDoc = new DOMParser().parseFromString(tmxText, "text/xml");
-
     const mapEl = tmxDoc.querySelector("map");
-    if (!mapEl) {
-      console.error("mapEl null, tmxDoc:", tmxDoc); // lihat apa yang di-parse
-      throw new Error(`Failed to parse TMX: ${tmxUrl}`);
-    }
 
     S.MAP_W = Number(mapEl.getAttribute("width"));
     S.MAP_H = Number(mapEl.getAttribute("height"));
