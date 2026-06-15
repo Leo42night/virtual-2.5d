@@ -1,0 +1,7 @@
+/vendor
+/dev
+db-mysql.sql
+db-sqlite.sql
+dev-log.txt
+README.md
+Tim Capstone.txt
