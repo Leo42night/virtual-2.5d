@@ -7,7 +7,7 @@
     },
     "routes": [
         {
-            "src": "/(css|js|images|assets|favicon.ico)/(.*)",
+            "src": "/(css|favicon|img|js||sounds|tile)/(.*)",
             "dest": "/public/$1/$2"
         },
         {
@@ -15,16 +15,5 @@
             "dest": "/api/index.php"
         }
     ],
-    "outputDirectory": "public",
-    "headers": [
-        {
-            "source": "/(.*).tmx",
-            "headers": [
-                {
-                    "key": "Content-Type",
-                    "value": "text/xml"
-                }
-            ]
-        }
-    ]
+    "outputDirectory": "public"
 }
