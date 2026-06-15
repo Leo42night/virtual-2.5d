@@ -2,6 +2,8 @@
 (() => {
   const { S } = window.GAME;
   const { ratingContainer } = window.POPUP.el;
+  const projectMap = Object.fromEntries(PROJECTS.map(p => [p.id, p]));
+  const projectRate = [];
 
   const AVATAR_MAX = 5;
   const avatarCooldown = new Map(); // url -> timestamp
@@ -16,37 +18,13 @@
     avatarCooldown.set(url, Date.now() + ms); // 2 menit
   }
 
-  let projects = [
-    {
-      title: "SIBUTAD",
-      image: `${S.BASE_URL}/img/kel-1.png`,
-    },
-    {
-      title: "Hotel 48",
-      image: `${S.BASE_URL}/img/kel-2.png`,
-    },
-    {
-      title: "Roona",
-      image: `${S.BASE_URL}/img/kel-3.png`,
-    },
-    {
-      title: "SIP Hewan",
-      image: `${S.BASE_URL}/img/kel-4.png`,
-    },
-    {
-      title: "SIGUDA",
-      image: `${S.BASE_URL}/img/kel-5.png`,
-    }
-  ];
-
   async function fetchRatings() {
     const res = await fetch(`${S.BASE_URL}/api/ratings`, { method: "GET" });
     const data = await res.json(); // urutan array sama dengan projects
-
     // console.log(data);
 
-    const projectNew = [];
-    for (let i = 0; i < projects.length; i++) {
+    for (const [projectId, ratings] of Object.entries(data)) {
+      const project = projectMap[Number(projectId)]; // ambil dari projectMap by id
       const newrating = {
         5: { count: 0, users: [] },
         4: { count: 0, users: [] },
@@ -54,24 +32,20 @@
         2: { count: 0, users: [] },
         1: { count: 0, users: [] }
       };
-      for (const rating of Object.values(JSON.parse(data[i].ratings))) {
-        // console.log(rating);
-        if (!rating.rate) continue;
+      for (const rating of ratings) {
         newrating[rating.rate].count = rating.count;
         newrating[rating.rate].users = rating.avatars;
       }
+
       // console.log(newrating);
 
-      projectNew.push({
-        title: projects[i].title,
-        image: projects[i].image,
+      projectRate.push({
+        title: project.title,
+        image: project.image,
         ratings: newrating
       });
     }
-
-    // console.log(projectNew);
-
-    projects = projectNew;
+    // console.log(projectRate);
   }
   // fetchRatings();
 
@@ -142,7 +116,7 @@
       return;
     }
     // console.log("projects :", projects);
-    projects.forEach(project => {
+    projectRate.forEach(project => {
       const result = calculateAverage(project.ratings);
 
       const card = document.createElement("div");

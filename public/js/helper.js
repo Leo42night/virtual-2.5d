@@ -645,34 +645,6 @@
   window.addEventListener("focus", resumeGame);
   document.addEventListener("visibilitychange", () => document.hidden ? pauseGame() : resumeGame());
 
-  /* =========================
-   POPUP DATA access (helper exposes getter only)
-  ========================= */
-  S.popupDataProjects = [];
-
-  async function initPopupData({ force = false } = {}) {
-    if (!force) {
-      const cached = window.POPUP?.loadPopupDataFromStorage?.();
-      if (cached) {
-        S.popupDataProjects = cached;
-        return cached;
-      }
-    }
-    try {
-      const fresh = await window.POPUP?.fetchPopupData?.(S.BASE_URL);
-      S.popupDataProjects = fresh || [];
-      return S.popupDataProjects;
-    } catch (e) {
-      console.error(e);
-      S.popupDataProjects = [];
-      return [];
-    }
-  }
-
-  function getPopupDataByProjectId(id) {
-    return window.POPUP?.getPopupDataById?.(S.popupDataProjects, id) || null;
-  }
-
   // VECTOR PLAYER TANGENT SLIDING
   // ===== Vector helpers
   function vSub(a, b) { return { x: a.x - b.x, y: a.y - b.y }; }
@@ -920,10 +892,6 @@
    EXPOSE
   ========================= */
   window.GAME_HELPER = {
-    // init
-    initPopupData,
-    getPopupDataByProjectId,
-
     // stage/camera
     updateStageHitArea,
     centerCameraOnPlayer,
@@ -961,6 +929,6 @@
 
     // pauseGame
     pauseGame,
-    resumeGame,  
+    resumeGame,
   };
 })();

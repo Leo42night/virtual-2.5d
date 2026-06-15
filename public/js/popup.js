@@ -30,18 +30,6 @@
     } catch { }
   }
 
-  async function fetchPopupData(baseUrl) {
-    const res = await fetch(`${baseUrl}/api/projects`);
-    if (!res.ok) throw new Error("HTTP " + res.status);
-    const data = await res.json();
-    savePopupDataToStorage(data);
-    return data;
-  }
-
-  function getPopupDataById(list, id) {
-    return list?.find((p) => p.id == id) || null;
-  }
-
   /* =========================
    * UI refs (ambil sekali)
    * ========================= */
@@ -219,7 +207,7 @@
     el.rating?.classList.add("hidden");
     el.top?.classList.add("hidden");
     hidePopupCom();
-    if(el.vid0) stopIframe(el.vid0); // presentation day
+    if (el.vid0) stopIframe(el.vid0); // presentation day
 
     // hide popup
     el.popup?.classList.add("hidden");
@@ -327,8 +315,6 @@
 
     // data/cache
     loadPopupDataFromStorage,
-    fetchPopupData,
-    getPopupDataById,
 
     // (opsional) expose untuk debugging
     updateMyRateShow,

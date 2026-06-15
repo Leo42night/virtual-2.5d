@@ -3,6 +3,7 @@
   const G = window.GAME;
   const { app, L, S, CFG } = G;
   const H = window.GAME_HELPER;
+  const projectMap = Object.fromEntries(PROJECTS.map(p => [p.id, p]));
 
   function tileSpriteBaseY() {
     return S.TILE_H / 2;
@@ -174,7 +175,7 @@
 
   async function routeTriggerPopup(props) {
     // Hentikan player movement
-    H.pauseGame(); 
+    H.pauseGame();
 
     // console.log("routeTriggerPopup", props);
     const baseUrl = S.BASE_URL;
@@ -207,8 +208,8 @@
       return;
     }
 
-    // Data by project id "tim"
-    const data = window.GAME_HELPER.getPopupDataByProjectId(props.tim);
+    // Data by project id "tim" (ambil dari projects.js)
+    const data = projectMap[props.tim];
     // console.log("data", data);
 
     if (props.mode === "top") window.POPUP.showPopupProject(baseUrl, data || {});

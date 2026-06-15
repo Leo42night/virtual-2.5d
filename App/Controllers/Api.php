@@ -16,16 +16,10 @@ class Api extends Controller
     echo "API Kelas PBO 2025";
   }
 
-  public function projects()
-  {
-    $data = $this->model("Project_model")->getAll();
-    echo json_encode($data);
-  }
-
   // get rating of each project (name, avg_rate, total_rate)
   public function ratings()
   {
-    $data = $this->model("Project_model")->getRatingProjects();
+    $data = $this->model("Rating_model")->getRatingProjects();
     echo json_encode($data);
   }
 
@@ -54,7 +48,7 @@ class Api extends Controller
     $req = json_decode(file_get_contents('php://input'), true);
     $project_id = $req['project_id'] ?? null;
     $user_id = $req['user_id'] ?? null;
-    if(!$project_id || !$user_id) {
+    if (!$project_id || !$user_id) {
       echo json_encode(['success' => false, 'message' => 'project_id & user_id is required']);
       return;
     }
@@ -219,8 +213,8 @@ class Api extends Controller
     // END: DEBUG MODE
   }
 
-  // utilities
-  public static function getAuthUser()
+  // utilities for this class
+  private static function getAuthUser()
   {
     if (!isset($_COOKIE['auth_token']))
       return null;

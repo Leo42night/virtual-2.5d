@@ -1,9 +1,9 @@
 <?php
 class App
 {
-  private $controller = "Home";
+  private $controller = "Home"; // default file Controllers/Home.php 
 
-  private $method = "index";
+  private $method = "index"; // default method
   private $params = [];
 
   public function __construct()
@@ -56,7 +56,7 @@ class App
       // pecah class & method
       $url = explode('/', $url);
       // jika method format "nama-method" ubah jadi "namaMethod"
-      if(isset($url[1]) && strpos($url[1], '-')) {
+      if (isset($url[1]) && strpos($url[1], '-')) {
         $url[1] = $this->kebabToCamel($url[1]);
       }
       // ubah "key=value,key2=value2" jadi ["key" => "value", "key2" => "value2"]

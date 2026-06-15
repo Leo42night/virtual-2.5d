@@ -1,5 +1,4 @@
 <?php
-// postfix _model agar tidak tabrakan dengan class di controller (keduanya bisa di require bersamaan)
 class Rating_model
 {
   private $table = 'ratings';
@@ -12,31 +11,64 @@ class Rating_model
 
   public function getRate($project_id, $user_id)
   {
-    $this->db->query("SELECT * FROM " . $this->table . " WHERE project_id = :project_id AND user_id = :user_id");
-    $this->db->bind('project_id', $project_id);
-    $this->db->bind('user_id', $user_id);
-    return $this->db->single();
+    $rows = $this->db->query(
+      "SELECT * FROM {$this->table} WHERE project_id = ? AND user_id = ?",
+      [$project_id, $user_id]
+    );
+    return $rows[0] ?? null;
+  }
+
+  public function getRatingProjects()
+  {
+    $rows = $this->db->query("
+        SELECT
+            r.project_id,
+            r.rate,
+            COUNT(*) AS total_raters,
+            GROUP_CONCAT(u.picture) AS avatars_raw
+        FROM ratings r
+        LEFT JOIN users u ON u.id = r.user_id
+        GROUP BY r.project_id, r.rate
+        ORDER BY r.project_id
+    ");
+
+    $grouped = [];
+    foreach ($rows as $row) {
+      $pid = $row['project_id'];
+
+      $avatars = $row['avatars_raw']
+        ? array_slice(explode(',', $row['avatars_raw']), 0, 3)
+        : [];
+
+      $grouped[$pid][] = [
+        'rate' => (int) $row['rate'],
+        'count' => (int) $row['total_raters'],
+        'avatars' => $avatars,
+      ];
+    }
+
+    return $grouped;
   }
 
   public function store($user_id, $project_id, $rate)
   {
-    $sql = "INSERT INTO " . $this->table . " (`project_id`, `user_id`, `rate`) VALUES (:project_id, :user_id, :rate)";
-    $this->db->query($sql);
-    $this->db->bind('project_id', $project_id);
-    $this->db->bind('user_id', $user_id);
-    $this->db->bind('rate', $rate);
-    $this->db->execute();
-    return $this->db->rowCount();
+    $result = $this->db->execute([
+      [
+        'sql' => "INSERT INTO {$this->table} (project_id, user_id, rate) VALUES (?, ?, ?)",
+        'args' => $this->db->bindArgs([$project_id, $user_id, $rate]),
+      ]
+    ]);
+    return $result[0]['affected_row_count'] ?? 0;
   }
 
   public function update($user_id, $project_id, $rate)
   {
-    $sql = "UPDATE " . $this->table . " SET rate = :rate WHERE project_id = :project_id AND user_id = :user_id";
-    $this->db->query($sql);
-    $this->db->bind('project_id', $project_id);
-    $this->db->bind('user_id', $user_id);
-    $this->db->bind('rate', $rate);
-    $this->db->execute();
-    return $this->db->rowCount();
+    $result = $this->db->execute([
+      [
+        'sql' => "UPDATE {$this->table} SET rate = ? WHERE project_id = ? AND user_id = ?",
+        'args' => $this->db->bindArgs([$rate, $project_id, $user_id]),
+      ]
+    ]);
+    return $result[0]['affected_row_count'] ?? 0;
   }
 }

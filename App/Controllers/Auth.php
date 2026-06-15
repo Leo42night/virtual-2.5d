@@ -55,7 +55,7 @@ class Auth extends Controller
     ]);
   }
 
-  public function recall()
+  public function recall() // redirect callback
   {
     header("Cross-Origin-Opener-Policy: unsafe-none");
     header("Cross-Origin-Embedder-Policy: unsafe-none");

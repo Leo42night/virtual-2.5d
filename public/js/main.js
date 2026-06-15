@@ -39,7 +39,7 @@
     marker.endFill();
     L.markers.addChild(marker);
   });
-  
+
   // game loop
   app.ticker.add(() => {
     if (!S.worldReady || !S.player || S.gamePaused) return;
@@ -110,8 +110,7 @@
   // init world
   Promise.all([
     H.loadTMXAndBuildMap(CFG.TMX.MAP),
-    H.createPlayerFromSheet(),
-    H.initPopupData(),
+    H.createPlayerFromSheet()
   ]).then(() => {
     S.worldReady = true;
     S.lastUpdate = Date.now();

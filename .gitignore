@@ -3,3 +3,10 @@ credentials.json
 .env
 dev.html
 db-fill.sql
+local.txt
+
+# ambil data user dari dafar student
+dev/credentials.json
+dev/token.json
+dev/students.json
+dev/__pycache__/

@@ -6,7 +6,7 @@ const SHEET_URL = `${BASE_URL}/img/sheet-asdos.png`; // contoh: "./codec_sheet.p
 // console.log("SHEET_URL:", SHEET_URL);
 
 // Link repo (ubah sesuai repo kamu)
-const GITHUB_REPO_URL = "https://github.com/Leo42night/gim-ppbo-2025";
+const GITHUB_REPO_URL = "https://github.com/Leo42night/virtual-2.5d";
 
 const FRAME_LEO_COUNT = 5;
 const SHEET_LEO_W = 1205;

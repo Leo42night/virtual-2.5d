@@ -7,9 +7,9 @@ ini_set('display_startup_errors', 1); // true
 // set scope error reporting
 error_reporting(E_ALL);
 
-spl_autoload_register(function($class) {
+spl_autoload_register(function ($class) {
     $prefix = "App\\";
-    $base_dir = __DIR__ . '/../App/';
+    $base_dir = __DIR__ . '/../App/'; // handle di folder App
 
     // pastikan class App\Controllers\<Class> → App/controllers/<Class>.php
     if (str_starts_with($class, $prefix)) {
