@@ -28,13 +28,10 @@ class Auth extends Controller
     // Encode JWT
     $jwt = JWT::encode($payload, $secret, 'HS256');
 
-    // Secure flag yang benar
-    $isHttps = HTTPS === 'on';
-
     setcookie("oauth_state_token", $jwt, [
       'expires' => time() + 300,
       'httponly' => true,
-      'secure' => $isHttps,
+      'secure' => !IS_LOCAL,
       'path' => '/',
       'samesite' => 'Lax'
     ]);
@@ -64,7 +61,7 @@ class Auth extends Controller
 
     $code = $_GET['code'] ?? null;
     $state = $_GET['state'] ?? null;
-    $isHttps = HTTPS === 'on';
+    $isHttps = !IS_LOCAL;
 
     function renderClosePage($ok, $payload = [])
     {
@@ -168,7 +165,7 @@ class Auth extends Controller
     }
 
 
-    // Validasi domain & format: H1101xx10xx@student.untan.ac.id (!!! ditutup untuk open version)
+    // JIka ingin hanya email khusus yg bisa login
     // $pattern = '/^H1101\d{2}10\d{2}@student\.untan\.ac\.id$/i';
 
     // if (!preg_match($pattern, $email)) {
@@ -219,14 +216,12 @@ class Auth extends Controller
     $userJwt = JWT::encode($userPayload, $secret, 'HS256');
 
     // simpan cookie auth_token (same-origin)
-    $isHttps = HTTPS === 'on';
-
     setcookie("auth_token", $userJwt, [
       'expires' => time() + 86400,
       'httponly' => true,
-      'secure' => $isHttps, // untuk localhost http -> false
+      'secure' => !IS_LOCAL, // untuk localhost http -> false
       'path' => '/',
-      'samesite' => 'Lax'
+      'samesite' => 'None' // ← GANTI dari 'Lax' ke 'None' untuk cross-context popup
     ]);
 
     // Jangan kirim token google ke frontend
@@ -257,7 +252,7 @@ class Auth extends Controller
       [
         'expires' => time() - 3600,
         'httponly' => true,
-        'secure' => HTTPS === 'on',
+        'secure' => !IS_LOCAL,
         'path' => '/',
         'samesite' => 'Lax'
       ]
