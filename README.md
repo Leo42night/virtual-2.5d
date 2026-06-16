@@ -45,7 +45,9 @@ Struktur PHP MVC:
 ## Deployment
 Current Stable [](#) ([Video Test Demo](#)):
 - Vercel (auto trigger github, Domain Mapping Hostinger)
-   - masukkan .env selain `GOOGLE_REDIRECT_URI` ketika setup deploy
+   - masukkan .env ketika setup deploy vercel.
+   - `GOOGLE_REDIRECT_URI` tidak wajib dimasukkan, kecuali pakai domain hostinger.
+   - jika pakai hostinger, masukkan domain prefix `www` (cth: `www.domain/auth/recall`)
 - Database: Turso SQLite (HTTP API)
 
 1st [6537b5](https://github.com/Leo42night/virtual-2.5d/commit/6537b5041c4880cc18acafd9038d88d0a9f4e5f4):

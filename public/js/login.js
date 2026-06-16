@@ -108,24 +108,24 @@ const logoutBtn = document.getElementById("logoutBtn");
       const meRes = await fetch(`/api/me`, { credentials: "include" });
 
       const text = await meRes.text(); // ambil raw dulu sebelum parse
-      console.log("[ME] status:", meRes.status);
-      console.log("[ME] raw:", text);
+      // console.log("[ME] status:", meRes.status);
+      // console.log("[ME] raw:", text);
 
       let data;
       try {
         data = JSON.parse(text);
       } catch (parseErr) {
-        console.error("[ME] JSON parse failed:", parseErr.message);
-        console.error("[ME] response bukan JSON, kemungkinan HTML/PHP error");
+        // console.error("[ME] JSON parse failed:", parseErr.message);
+        // console.error("[ME] response bukan JSON, kemungkinan HTML/PHP error");
         me = null;
         setLoggedIn(false);
         return false;
       }
 
-      console.log("[ME] parsed:", data);
+      // console.log("[ME] parsed:", data);
 
       if (!meRes.ok || data?.error) {
-        console.warn("[ME] unauth atau error:", data?.error, data?.message);
+        // console.warn("[ME] unauth atau error:", data?.error, data?.message);
         me = null;
         setLoggedIn(false);
         return false;
