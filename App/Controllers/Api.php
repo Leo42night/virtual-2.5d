@@ -29,17 +29,17 @@ class Api extends Controller
 
     $u = self::getAuthUser();
 
-    if (!$u) {
+    if (!$u['status']) {
       http_response_code(401);
-      echo json_encode(['error' => 'unauthenticated', 'message' => 'User not logged in']);
+      echo json_encode(['error' => 'unauthenticated', 'message' => $u['message']]);
       return;
     }
-
+    $data = $u['data'];
     echo json_encode([
-      'id' => $u->sub,
-      'email' => $u->email,
-      'name' => $u->name,
-      'picture' => $u->picture,
+      'id' => $data->sub,
+      'email' => $data->email,
+      'name' => $data->name,
+      'picture' => $data->picture,
     ]);
   }
 
@@ -132,7 +132,7 @@ class Api extends Controller
 
       // ✅ auth
       $auth = $this->getAuthUser();
-      $user_id = $auth->sub ?? null;
+      $user_id = $auth['data']->sub ?? null;
 
       if (!$user_id) {
         $this->jsonResponse(401, [
@@ -214,16 +214,17 @@ class Api extends Controller
   }
 
   // utilities for this class
-  private static function getAuthUser()
+  private static function getAuthUser(): array
   {
     if (!isset($_COOKIE['auth_token']))
-      return null;
+      return ["status" => false, "message" => "_COOKIE['auth_token'] tidak ada"];
 
     try {
       $secret = JWT_SECRET;
-      return JWT::decode($_COOKIE['auth_token'], new Key($secret, 'HS256'));
+      $data = JWT::decode($_COOKIE['auth_token'], new Key($secret, 'HS256'));
+      return ["status" => true, "data" => $data];
     } catch (\Exception $e) {
-      return null;
+      return ["status" => false, "message" => "Decode JWT Gagal " . JWT_SECRET];
     }
   }
 }

@@ -219,7 +219,7 @@ class Auth extends Controller
     setcookie("auth_token", $userJwt, [
       'expires' => time() + 86400,
       'httponly' => true,
-      'secure' => !IS_LOCAL, // untuk localhost http -> false
+      'secure' => true, // untuk localhost http -> false
       'path' => '/',
       'samesite' => 'None' // ← GANTI dari 'Lax' ke 'None' untuk cross-context popup
     ]);
