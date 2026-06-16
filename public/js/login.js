@@ -57,7 +57,6 @@ const logoutBtn = document.getElementById("logoutBtn");
       }, 400);
 
       function onMessage(event) {
-        // ✅ pastikan origin sesuai backend kamu (kalau callback dikirim dari backend origin)
         if (event.origin !== BASE_URL) return;
         if (event.source !== popup) return;
 
@@ -67,8 +66,25 @@ const logoutBtn = document.getElementById("logoutBtn");
         }
         if (!data || data.type !== "oauth_result" || typeof data.ok !== "boolean") return;
 
-        cleanup();
-        resolve(data);
+        cleanup(); // cleanup dulu sebelum async
+        if (data.ok && data.token) {
+          // ← async IIFE karena onMessage tidak bisa async
+          (async () => {
+            try {
+              await fetch("/auth/setcookie", {
+                method: "POST",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ token: data.token }) // ← data.token, bukan e.data.token
+              });
+            } catch (err) {
+              console.error("[setcookie] failed:", err);
+            }
+            resolve(data); // ← resolve setelah fetch selesai
+          })();
+        } else {
+          resolve(data); // ok: false, langsung resolve
+        }
       }
 
       function cleanup() {

@@ -164,26 +164,6 @@ class Auth extends Controller
       renderClosePage(false, ['error' => 'failed_get_userinfo']);
     }
 
-
-    // JIka ingin hanya email khusus yg bisa login
-    // $pattern = '/^H1101\d{2}10\d{2}@student\.untan\.ac\.id$/i';
-
-    // if (!preg_match($pattern, $email)) {
-    //   setcookie("auth_token", "", [
-    //     'expires' => time() - 3600,
-    //     'path' => '/',
-    //     'httponly' => true,
-    //     'secure' => HTTPS === 'on',
-    //     'samesite' => 'Lax'
-    //   ]);
-
-    //   // Optional: kalau mau tegas, jangan buat user & jangan set auth_token
-    //   renderClosePage(false, [
-    //     'error' => 'email_not_allowed',
-    //     'message' => 'Email tidak valid. Gunakan email UNTAN: H1101xx10xx@student.untan.ac.id'
-    //   ]);
-    // }
-
     // cek user di DB
     $userModel = $this->model('User_model');
     $existing = $userModel->getByEmail($email);
@@ -215,19 +195,42 @@ class Auth extends Controller
 
     $userJwt = JWT::encode($userPayload, $secret, 'HS256');
 
-    // simpan cookie auth_token (same-origin)
-    setcookie("auth_token", $userJwt, [
-      'expires' => time() + 86400,
-      'httponly' => true,
-      'secure' => true, // untuk localhost http -> false
-      'path' => '/',
-      'samesite' => 'None' // ← GANTI dari 'Lax' ke 'None' untuk cross-context popup
-    ]);
-
     // Jangan kirim token google ke frontend
     renderClosePage(true, [
-      'message' => 'login_success'
+      'message' => 'login_success',
+      'token' => $userJwt  // ← kirim JWT ke frontend
     ]);
+  }
+
+  public function setcookie()
+  {
+    $body = json_decode(file_get_contents('php://input'), true);
+    $token = $body['token'] ?? null;
+
+    if (!$token) {
+      http_response_code(400);
+      echo json_encode(['error' => 'missing token']);
+      return;
+    }
+
+    // Verifikasi token valid dulu sebelum di-set
+    try {
+      JWT::decode($token, new Key(JWT_SECRET, 'HS256'));
+    } catch (\Exception $e) {
+      http_response_code(401);
+      echo json_encode(['error' => 'invalid token']);
+      return;
+    }
+
+    setcookie("auth_token", $token, [
+      'expires' => time() + 86400,
+      'httponly' => true,
+      'secure' => !IS_LOCAL,
+      'path' => '/',
+      'samesite' => 'Lax'  // ← balik ke Lax, karena sekarang same-origin request
+    ]);
+
+    echo json_encode(['ok' => true]);
   }
 
   public function logout()
