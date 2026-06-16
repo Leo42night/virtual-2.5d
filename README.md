@@ -43,7 +43,7 @@ Struktur PHP MVC:
 - `App/config/config.php`: load data env
   
 ## Deployment
-Current Stable [](#) ([Video Test Demo](#)):
+[Current Stable](https://github.com/Leo42night/virtual-2.5d/commit/fe6121cbd330e096002722fd90bfbfccf87750ca) ([Video Test Demo](#)):
 - Vercel (auto trigger github, Domain Mapping Hostinger)
    - masukkan .env ketika setup deploy vercel.
    - `GOOGLE_REDIRECT_URI` tidak wajib dimasukkan, kecuali pakai domain hostinger.

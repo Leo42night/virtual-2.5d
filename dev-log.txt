@@ -3,3 +3,7 @@ v1.3 Performance issue:
   - Fix idea 1: set src sama seperti video lainnya.
 - Canvas terkadang menghilang (mobile) dan perlu di load ulang.
   - Fix idea 1: Baca js event lost view canvas & munculkan tombol refresh trigger atau paksa refresh ulang.
+
+Jun 16/2026:
+- V2.1: Ketika buka scorebeard, tutup, bukan popup com peserta, 
+beri rating, tutup, buka scorebeard lagi -> Scorebear jadi duplikat 2 baris.

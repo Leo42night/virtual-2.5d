@@ -3,7 +3,7 @@
   const { S } = window.GAME;
   const { ratingContainer } = window.POPUP.el;
   const projectMap = Object.fromEntries(PROJECTS.map(p => [p.id, p]));
-  const projectRate = [];
+  let projectRate = [];
 
   const AVATAR_MAX = 5;
   const avatarCooldown = new Map(); // url -> timestamp
@@ -22,6 +22,7 @@
     const res = await fetch(`${S.BASE_URL}/api/ratings`, { method: "GET" });
     const data = await res.json(); // urutan array sama dengan projects
     // console.log(data);
+    projectRate = []; // kosongkan ulang
 
     for (const [projectId, ratings] of Object.entries(data)) {
       const project = projectMap[Number(projectId)]; // ambil dari projectMap by id
